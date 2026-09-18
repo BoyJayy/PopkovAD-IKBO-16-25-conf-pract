@@ -165,5 +165,77 @@ EOF
 # задача 8
 
 ```bash
+cat > archive_ext <<'EOF'
+#!/bin/bash
 
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <directory> <extension>"
+    exit 1
+fi
+
+dir="$1"
+ext="${2#.}"
+
+if [ ! -d "$dir" ]; then
+    echo "Directory not found: $dir"
+    exit 1
+fi
+
+find "$dir" -type f -name "*.$ext" -print0 |
+tar --null -T - -cf archive.tar
+
+echo "Created archive.tar"
+EOF
 ```
+
+![alt text](image-8.png)
+
+## задача 9
+
+``` bash
+cat > spaces_to_tabs <<'EOF'
+#!/bin/bash
+
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <input> <output>"
+    exit 1
+fi
+
+input="$1"
+output="$2"
+
+if [ ! -f "$input" ]; then
+    echo "File not found: $input"
+    exit 1
+fi
+
+sed $'s/    /\t/g' "$input" > "$output"
+EOF
+```
+
+![alt text](image-9.png)
+
+
+## задача 10
+
+``` bash
+cat > empty_files <<'EOF'
+#!/bin/bash
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <directory>"
+    exit 1
+fi
+
+dir="$1"
+
+if [ ! -d "$dir" ]; then
+    echo "Directory not found: $dir"
+    exit 1
+fi
+
+find "$dir" -maxdepth 1 -type f -name '*.txt' -empty -printf '%f\n'
+EOF
+```
+
+![alt text](image-10.png)
