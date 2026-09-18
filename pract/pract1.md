@@ -162,7 +162,7 @@ EOF
 ![alt text](image-7.png)
 
 
-# задача 8
+## задача 8
 
 ```bash
 cat > archive_ext <<'EOF'
