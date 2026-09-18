@@ -41,7 +41,25 @@ EOF
 ## задача 4
 
 ``` bass
-
+grep -oE '[A-Za-z_][A-Za-z0-9_]*' hello.c | sort -u | tr '\n' ' '
 ``` 
+-o выводить только найденные совпадения
+-E использовать расширенные регулярные выражения
+![alt text](image-2.png)
+![alt text](image-3.png)
+```bash
+cat > identifiers <<'EOF'
+#!/bin/bash
 
-``` bash =
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <file>"
+    exit 1
+fi
+
+grep -oE '[A-Za-z_][A-Za-z0-9_]*' "$1" | sort -u | tr '\n' ' '
+echo
+EOF
+```
+после работает так
+![alt text](image-4.png)
+
