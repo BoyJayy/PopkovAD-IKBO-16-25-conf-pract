@@ -63,3 +63,107 @@ EOF
 после работает так
 ![alt text](image-4.png)
 
+## задача 5
+
+```bash
+cat > reg <<'EOF'
+#!/bin/bash
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <file>"
+    exit 1
+fi
+
+file="$1"
+
+if [ ! -f "$file" ]; then
+    echo "File not found: $file"
+    exit 1
+fi
+
+chmod 755 "$file"
+sudo cp "$file" "/usr/local/bin/$(basename "$file")"
+
+echo "Command $(basename "$file") registered"
+EOF
+```
+
+![alt text](image-5.png)
+
+
+## задача 6
+
+```bash
+cat > check_comments <<'EOF'
+#!/bin/bash
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <directory>"
+    exit 1
+fi
+
+dir="$1"
+
+if [ ! -d "$dir" ]; then
+    echo "Directory not found: $dir"
+    exit 1
+fi
+
+find "$dir" -type f \( -name '*.c' -o -name '*.js' -o -name '*.py' \) | while read -r file; do
+    first=$(head -n 1 "$file")
+
+    case "$file" in
+        *.py)
+            if [[ "$first" =~ ^[[:space:]]*# ]]; then
+                echo "$file: comment"
+            else
+                echo "$file: no comment"
+            fi
+            ;;
+
+        *.c|*.js)
+            if [[ "$first" =~ ^[[:space:]]*(//|/\*) ]]; then
+                echo "$file: comment"
+            else
+                echo "$file: no comment"
+            fi
+            ;;
+    esac
+done
+EOF
+```
+
+![alt text](image-6.png)
+
+## задача 7 (перед началом рекомендую ознакомиться со своей реализацией sha256 https://github.com/BoyJayy/image-similarity-lab/blob/main/src/sha256impl.cpp)
+
+```bash
+cat > duplicates <<'EOF'
+#!/bin/bash
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <directory>"
+    exit 1
+fi
+
+dir="$1"
+
+if [ ! -d "$dir" ]; then
+    echo "Directory not found: $dir"
+    exit 1
+fi
+
+find "$dir" -type f -exec sha256sum {} + |
+sort |
+uniq -w 64 --all-repeated=separate
+EOF
+```
+
+![alt text](image-7.png)
+
+
+# задача 8
+
+```bash
+
+```
