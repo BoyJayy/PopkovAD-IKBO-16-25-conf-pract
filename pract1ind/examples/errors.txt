@@ -1,0 +1,12 @@
+unknown
+ls
+cd first second
+cd "$HOME"
+ls -z
+ls -- -file
+cd "незакрытая кавычка
+ls -a
+exit extra
+cd
+exit
+ls "эта строка не должна выполняться"

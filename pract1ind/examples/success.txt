@@ -1,0 +1,7 @@
+ls
+ls -al "$HOME"
+cd ${HOME}
+cd "папка с пробелами"
+ls '$HOME'
+
+exit
