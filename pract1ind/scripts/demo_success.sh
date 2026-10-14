@@ -6,6 +6,6 @@ ls
 exit
 EOF
 sh "$PROJECT_DIR/run.sh" \
-    --vfs "$PROJECT_DIR/examples/виртуальная файловая система" \
+    --vfs "$PROJECT_DIR/examples/vfs/several/папка с пробелами" \
     --prompt 'demo$ ' \
     --startup-script "$PROJECT_DIR/examples/success.txt"
