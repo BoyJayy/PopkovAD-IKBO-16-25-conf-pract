@@ -1,0 +1,30 @@
+vfs-info
+vfs-info /hello.txt
+vfs-info /level1/level2/level3
+vfs-info /level1/level2/level3/data.txt
+vfs-info "/папка с пробелами/заметка.txt"
+vfs-info /.hidden
+vfs-info /not-found
+vfs-info /hello.txt/child
+vfs-info first second
+ls
+ls -a
+ls -l
+ls -al
+ls -la
+ls -a -l /hello.txt
+ls -- -file
+ls "$HOME"
+ls '$HOME'
+cd
+cd /level1
+cd "папка с пробелами"
+cd first second
+cd -z
+ls -z
+unknown
+cd "незакрытые кавычки
+exit extra
+vfs-info /
+exit
+vfs-info /эта-строка-не-исполняется

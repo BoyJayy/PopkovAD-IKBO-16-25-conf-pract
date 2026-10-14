@@ -9,9 +9,9 @@ from shell import default_prompt
 def parse_config(argv=None):
     """Прочитать путь VFS, приглашение и путь стартового скрипта."""
     parser = argparse.ArgumentParser(
-        description="Эмулятор оболочки: вариант 19, этапы 1 и 2")
+        description="Эмулятор оболочки: вариант 19, этапы 1-3")
     parser.add_argument("--vfs", metavar="PATH",
-                        help="путь VFS (на этапе 2 только сохраняется)")
+                        help="директория для загрузки VFS в память")
     parser.add_argument("--prompt", metavar="TEXT",
                         help="пользовательское приглашение к вводу")
     parser.add_argument("--startup-script", metavar="PATH",
