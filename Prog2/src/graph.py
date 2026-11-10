@@ -52,3 +52,14 @@ def build_graph(root, dependencies, substring):
         raise ValueError("exclude: фильтр исключает анализируемый пакет")
     visit(root, 0)
     return graph
+
+
+def reverse_graph(root, records, dependencies, substring):
+    """Invert dependency edges and apply the same recursive DFS from root."""
+    incoming = {}
+    for node in records:
+        if excluded(node, substring):
+            continue
+        for target in dependencies(node):
+            incoming.setdefault(target, []).append(node)
+    return build_graph(root, lambda node: incoming.get(node, ()), substring)

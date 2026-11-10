@@ -11,7 +11,7 @@ from apt_index import Package
 from apt_repository import AptRepository
 from apt_version import compare_versions
 from config import load_config
-from graph import Node, build_graph
+from graph import Node, build_graph, reverse_graph
 from test_repository import load_test, parse_graph
 
 
@@ -63,3 +63,21 @@ class GraphTests(unittest.TestCase):
             self.assertLess(compare_versions(left, right), 0)
             self.assertGreater(compare_versions(right, left), 0)
         self.assertEqual(compare_versions("1.0-00", "0:1.0"), 0)
+
+    def test_reverse_traverses_cycle_and_finds_transitive_dependents(self):
+        config = load_config(ROOT / "examples/test.yaml")
+        root, records, dependencies = load_test(config)
+        graph = reverse_graph(root, records, dependencies, "SKIP")
+        self.assertEqual(graph[root], (Node("D", "1.0"), Node("TOP", "1.0")))
+        self.assertEqual({node.name for node in graph}, set("ABCD") | {"TOP"})
+        self.assertIn(root, graph[Node("B", "1.0")])
+
+    def test_reverse_filter_excludes_parents_and_preserves_isolated_root(self):
+        config = load_config(ROOT / "examples/test.yaml")
+        root, records, dependencies = load_test(config)
+        graph = reverse_graph(root, records, dependencies, "TOP")
+        self.assertEqual({node.name for node in graph}, set("ABCD"))
+        island = Node("ISLAND", "1.0")
+        self.assertEqual(
+            reverse_graph(island, records, dependencies, ""), {island: ()}
+        )
