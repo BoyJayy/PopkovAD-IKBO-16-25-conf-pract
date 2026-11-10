@@ -1,0 +1,9 @@
+# A -> B -> D -> A образует цикл. C тоже зависит от D.
+A: B C
+B: D
+C: D SKIP
+D: A
+SKIP: HIDDEN
+HIDDEN:
+TOP: A C
+ISLAND:

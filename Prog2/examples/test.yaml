@@ -1,0 +1,6 @@
+package: A
+repository: graph.txt
+test_mode: true
+version: "1.0"
+ascii_tree: true
+exclude: "SKIP"
