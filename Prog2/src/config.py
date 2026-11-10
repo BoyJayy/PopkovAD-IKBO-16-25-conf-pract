@@ -9,7 +9,7 @@ from flat_yaml import parse_mapping
 
 APT_NAME = re.compile(r"[a-z0-9][a-z0-9+.-]+")
 TEST_NAME = re.compile(r"[A-Z]+")
-VERSION = re.compile(r"(?:[0-9]+:)?[0-9][a-zA-Z0-9.+~:-]*")
+VERSION = re.compile(r"(?:[0-9]+:)?[0-9][a-zA-Z0-9.+~-]*(?<!-)")
 MAX_CONFIG_BYTES = 16 * 1024
 MAX_VERSION_LENGTH = 256
 

@@ -1,0 +1,6 @@
+package: ubuntu-keyring
+repository: https://archive.ubuntu.com/ubuntu/dists/noble/main/binary-amd64/Packages.gz
+test_mode: false
+version: "2023.11.28.1"
+ascii_tree: false
+exclude: ""

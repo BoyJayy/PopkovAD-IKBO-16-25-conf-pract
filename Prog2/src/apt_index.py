@@ -3,6 +3,7 @@
 import gzip
 import lzma
 from dataclasses import dataclass
+from http.client import HTTPException
 from io import BytesIO
 from urllib.error import URLError
 from urllib.parse import urlsplit
@@ -41,7 +42,8 @@ class Package:
 
     def direct_lines(self):
         """Yield the original mandatory dependency declarations by field."""
-        for field, value in zip(RELATION_FIELDS, (self.pre_depends, self.depends)):
+        values = self.pre_depends, self.depends
+        for field, value in zip(RELATION_FIELDS, values):
             if value:
                 yield f"{field}: {value}"
 
@@ -62,7 +64,7 @@ def control_records(lines):
         else:
             key, separator, value = line.partition(":")
             if not separator:
-                raise ValueError("Индекс: ожидается поле формата ключ: значение")
+                raise ValueError("Индекс: ожидается поле ключ: значение")
             if key in PACKAGE_FIELDS:
                 fields[key] = value.strip()
     if fields:
@@ -96,7 +98,8 @@ def download_index(url):
         source = index_text(payload, urlsplit(url).path)
     except URLError as error:
         raise ValueError(f"Индекс недоступен: {error.reason}") from None
-    except (OSError, EOFError, lzma.LZMAError, UnicodeError) as error:
+    except (OSError, EOFError, HTTPException,
+            lzma.LZMAError, UnicodeError) as error:
         raise ValueError(f"Не удалось прочитать индекс: {error}") from None
     packages = [
         Package.from_fields(fields)
@@ -108,7 +111,7 @@ def download_index(url):
 
 
 def exact_package(packages, name, version):
-    """Find the requested version and report the versions available otherwise."""
+    """Find the requested version or report which versions are available."""
     versions = []
     for package in packages:
         if package.name == name:

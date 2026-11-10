@@ -17,7 +17,7 @@ class Node:
     def label(self):
         """Show version or mark that the name is absent from the index."""
         if self.version is None:
-            return f"{self.name} [нет в индексе]"
+            return f"{self.name} [unresolved]"
         return f"{self.name}={self.version}"
 
 

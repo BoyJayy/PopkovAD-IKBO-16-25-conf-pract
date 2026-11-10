@@ -109,7 +109,7 @@ class AptRepository:
                 and relation.accepts(version))
 
     def dependencies(self, node):
-        """Return distinct targets across Pre-Depends and Depends alternatives."""
+        """Return distinct targets from Pre-Depends and Depends alternatives."""
         if node.version is None:
             return ()
         package = self.records[node]

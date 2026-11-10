@@ -21,7 +21,7 @@ def parse_graph(source):
         if not separator or not TEST_NAME.fullmatch(name):
             raise ValueError(f"Граф, строка {number}: ожидается ИМЯ: ИМЕНА")
         if name in graph or any(not TEST_NAME.fullmatch(t) for t in targets):
-            raise ValueError(f"Граф, строка {number}: неверное или повторное имя")
+            raise ValueError(f"Граф, строка {number}: неверное имя или дубль")
         graph[name] = tuple(dict.fromkeys(targets))
     undefined = {target for values in graph.values() for target in values}
     undefined -= graph.keys()
