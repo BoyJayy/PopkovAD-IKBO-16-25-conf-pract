@@ -1,0 +1,6 @@
+package: mawk
+repository: https://archive.ubuntu.com/ubuntu/dists/noble/main/binary-amd64/Packages.gz
+test_mode: false
+version: "1.3.4.20240123-1build1"
+ascii_tree: true
+exclude: ""
