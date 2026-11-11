@@ -9,6 +9,17 @@ TEST_VERSION = "1.0"
 MAX_TEST_BYTES = 1024 * 1024
 
 
+def parse_graph_entry(line, number):
+    """Read a vertex and the uppercase names of its dependencies."""
+    name, separator, targets = line.partition(":")
+    name, targets = name.strip(), targets.split()
+    if not separator or not TEST_NAME.fullmatch(name):
+        raise ValueError(f"Граф, строка {number}: ожидается ИМЯ: ИМЕНА")
+    if any(not TEST_NAME.fullmatch(target) for target in targets):
+        raise ValueError(f"Граф, строка {number}: неверное имя или дубль")
+    return name, tuple(dict.fromkeys(targets))
+
+
 def parse_graph(source):
     """Parse uppercase names and reject duplicate or undefined vertices."""
     graph = {}
@@ -16,13 +27,10 @@ def parse_graph(source):
         line = line.partition("#")[0].strip()
         if not line:
             continue
-        name, separator, targets = line.partition(":")
-        name, targets = name.strip(), targets.split()
-        if not separator or not TEST_NAME.fullmatch(name):
-            raise ValueError(f"Граф, строка {number}: ожидается ИМЯ: ИМЕНА")
-        if name in graph or any(not TEST_NAME.fullmatch(t) for t in targets):
+        name, targets = parse_graph_entry(line, number)
+        if name in graph:
             raise ValueError(f"Граф, строка {number}: неверное имя или дубль")
-        graph[name] = tuple(dict.fromkeys(targets))
+        graph[name] = targets
     undefined = {target for values in graph.values() for target in values}
     undefined -= graph.keys()
     if undefined:

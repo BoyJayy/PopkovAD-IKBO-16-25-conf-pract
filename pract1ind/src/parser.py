@@ -17,36 +17,46 @@ def read_variable(line, index):
     return os.environ.get(name, ""), match.end()
 
 
-def parse_command(line):
-    """Разделить строку; раскрывать $NAME вне одинарных кавычек."""
-    tokens, word = [], []
-    quote, active, index = None, False, 0
+def read_word_part(line, index, quote):
+    """Прочитать обычный символ, экранирование или переменную."""
+    char = line[index]
+    if char == "\\" and quote != "'":
+        index += 1
+        if index == len(line):
+            raise ValueError("обратная косая черта без символа")
+        return line[index], index + 1
+    if char == "$" and quote != "'":
+        return read_variable(line, index)
+    return char, index + 1
+
+
+def read_word(line, index):
+    """Прочитать аргумент до пробельного символа вне кавычек."""
+    word = []
+    quote = None
     while index < len(line):
         char = line[index]
-        if char == "\\" and quote != "'":
-            index += 1
-            if index == len(line):
-                raise ValueError("обратная косая черта без символа")
-            word.append(line[index])
-            active = True
-        elif char in ("'", '"') and quote in (None, char):
+        if quote is None and char.isspace():
+            break
+        if char in ("'", '"') and quote in (None, char):
             quote = char if quote is None else None
-            active = True
-        elif char.isspace() and quote is None:
-            if active:
-                tokens.append("".join(word))
-                word, active = [], False
-        elif char == "$" and quote != "'":
-            value, index = read_variable(line, index)
-            word.append(value)
-            active = True
-            continue
+            index += 1
         else:
-            word.append(char)
-            active = True
-        index += 1
+            value, index = read_word_part(line, index, quote)
+            word.append(value)
     if quote is not None:
         raise ValueError("незакрытые кавычки")
-    if active:
-        tokens.append("".join(word))
+    return "".join(word), index
+
+
+def parse_command(line):
+    """Разделить строку и раскрыть $NAME вне одинарных кавычек."""
+    tokens = []
+    index = 0
+    while index < len(line):
+        if line[index].isspace():
+            index += 1
+        else:
+            token, index = read_word(line, index)
+            tokens.append(token)
     return tokens

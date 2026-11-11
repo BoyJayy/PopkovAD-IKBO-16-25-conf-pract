@@ -16,23 +16,31 @@ def default_prompt():
     return f"{getpass.getuser()}@{socket.gethostname()}:~$ "
 
 
+def validate_ls_options(arguments):
+    """Проверить опции ls до разделителя --."""
+    for argument in arguments:
+        if argument == "--":
+            break
+        if argument.startswith("-") and argument not in LS_OPTIONS:
+            raise ValueError(f"ls: неизвестная опция {argument}")
+
+
+def validate_path_arguments(command, arguments):
+    """Проверить аргументы пути для cd и vfs-info."""
+    if len(arguments) > MAX_PATH_ARGUMENTS:
+        raise ValueError(f"{command} принимает не более одного пути")
+    if command == "cd" and arguments and arguments[0].startswith("-"):
+        raise ValueError("cd: опции не поддерживаются")
+
+
 def validate_arguments(command, arguments):
     """Проверить аргументы поддерживаемых команд."""
     if command == "exit" and arguments:
         raise ValueError("exit не принимает аргументы")
-    if command == "cd":
-        if len(arguments) > MAX_PATH_ARGUMENTS:
-            raise ValueError("cd принимает не более одного пути")
-        if arguments and arguments[0].startswith("-"):
-            raise ValueError("cd: опции не поддерживаются")
-    if command == "vfs-info" and len(arguments) > MAX_PATH_ARGUMENTS:
-        raise ValueError("vfs-info принимает не более одного пути")
+    if command in {"cd", "vfs-info"}:
+        validate_path_arguments(command, arguments)
     if command == "ls":
-        for argument in arguments:
-            if argument == "--":
-                break
-            if argument.startswith("-") and argument not in LS_OPTIONS:
-                raise ValueError(f"ls: неизвестная опция {argument}")
+        validate_ls_options(arguments)
 
 
 def execute(line, write=print, vfs=None):

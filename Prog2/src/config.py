@@ -28,11 +28,16 @@ class Config:
 
 def repository_source(value, test_mode, config_path):
     """Resolve a local file or validate an absolute HTTP(S) URL."""
-    if test_mode:
-        path = config_path.parent / value
-        if not path.is_file():
-            raise ValueError("repository: укажите существующий файл графа")
-        return str(path.resolve())
+    if not test_mode:
+        return repository_url(value)
+    path = config_path.parent / value
+    if not path.is_file():
+        raise ValueError("repository: укажите существующий файл графа")
+    return str(path.resolve())
+
+
+def repository_url(value):
+    """Check that the repository URL identifies an HTTP(S) file."""
     try:
         url = urlsplit(value)
         url.port
