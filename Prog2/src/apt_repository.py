@@ -5,6 +5,7 @@ import re
 from collections import defaultdict
 from dataclasses import dataclass
 from functools import cmp_to_key
+from typing import Optional
 
 from apt_index import download_index, exact_package
 from apt_version import compare_versions
@@ -26,9 +27,9 @@ class Relation:
     """One alternative, optionally qualified and restricted by version."""
 
     name: str
-    qualifier: str | None
-    operator: str | None
-    version: str | None
+    qualifier: Optional[str]
+    operator: Optional[str]
+    version: Optional[str]
 
     def accepts(self, version):
         """Check the provided version against this alternative's constraint."""

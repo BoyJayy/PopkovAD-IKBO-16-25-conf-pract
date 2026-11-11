@@ -1,6 +1,7 @@
 """Represent package versions and traverse the graph recursively."""
 
 from dataclasses import dataclass
+from typing import Optional
 
 MAX_DEPTH = 200
 MAX_NODES = 500
@@ -12,7 +13,7 @@ class Node:
     """A concrete package version, or an unresolved dependency name."""
 
     name: str
-    version: str | None
+    version: Optional[str]
 
     def label(self):
         """Show version or mark that the name is absent from the index."""
